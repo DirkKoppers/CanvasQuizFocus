@@ -1,5 +1,6 @@
 # CanvasQuizFoucs
 Remind students to stay focused when taking a Canvas quiz
+
 “Focus Mode” Proof of concept.
 
  - Uses Javascript “mouseleave” event to detect a user leaving the page.
