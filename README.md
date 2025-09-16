@@ -1,7 +1,7 @@
 # CanvasQuizFocusMode
 Remind students to stay focused when taking a Canvas quiz
 
-“Focus Mode” Proof of concept.
+“Focus Mode” Proof of concept, use at your own risk.
 
  - Uses Javascript “mouseleave” event to detect a user leaving the page.
  - Only enabled for enrolled students and “View as Student” mode.
