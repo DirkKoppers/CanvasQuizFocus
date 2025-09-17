@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ">
       <p>
         Hi ${currentUserDisplay},<br><br>
-        We would like you to stay focused on this quiz. There are good reasons one might leave this page. 
-        If you need to use an external tool or browser extension to complete this quiz, please check in with your institution to see if it is approved.<br><br>
+        We would like you to stay focused on this quiz. If you need to use an external tool or browser extension to complete this quiz, 
+		please check in with your institution to see if it is approved.<br><br>
         When you are ready to continue <button id="iamfocused">Click Me!</button>
         <span id="show_once" style="display:none;"><br><br>(This reminder won't show up again for this quiz session)</span>
       </p>
@@ -139,15 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
     stayNoticedDiv.style.bottom = '';
     stayNoticedDiv.style.left = '';
 
-    // Position horizontally first
+    // Position horizontally
     if (mouseX <= 0) {
       stayNoticedDiv.style.left = `${stayNoticedOffset}px`;
     } else if (mouseX >= docWidth) {
       stayNoticedDiv.style.right = `${stayNoticedOffset}px`;
     }
-
-    // Position vertically first
-    if (mouseY <= 0) {
+    // Position vertically
+    else if (mouseY <= 0) {
       stayNoticedDiv.style.top = `${stayNoticedOffset}px`;
     } else if (mouseY >= docHeight) {
       stayNoticedDiv.style.bottom = `${stayNoticedOffset}px`;
