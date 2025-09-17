@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const newAlert = document.createElement('div');
       newAlert.innerHTML = `
         <div id="stayfocused" style="display:none; padding: 50px; background: #ffdddd; border: 1px solid #ff0000; z-index: 9999999; position: fixed; top: 10%; left: 50%; transform: translateX(-50%); max-width: 400px;">
-          <p>Hi ${currentUserDisplay},<br><br>We would like you to stay focused on this quiz. There are good reasons one might wonder of from this page. If you need to use an external tool or extention to complete this quiz,
-		  please check in with your institution if it is approved.<br><br>When you are ready to continue <button id="iamfocused">Click Me!</button>
+          <p>Hi ${currentUserDisplay},<br><br>We would like you to stay focused on this quiz. There are good reasons one might leave this page. If you need to use an external tool or browser extension to complete this quiz, 
+		  please check in with your institution to see if it is approved.<br><br>When you are ready to continue <button id="iamfocused">Click Me!</button>
 		  <span id="show_once" style="display:none;"><br><br>(This reminder won't show up again for this quiz session)</span></p>
         </div>`;
 
