@@ -48,9 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	  
       // Create notice container and message
       const newNotice = document.createElement('div');
-      newNotice.innerHTML = '<div id="staynoticed" style="display:none; padding: 7px; background: #ffdddd; border: 1px solid #ff0000;">stay focused</div>';
-		
-		
+      newNotice.innerHTML = '<div id="staynoticed" style="z-index: 9999; top: 15px; right: 15px; position: fixed; display: none; padding: 7px; background: #ffdddd; border: 1px solid #ff0000;">stay focused</div>';
+	
       const crumbs_right = document.getElementsByClassName('right-of-crumbs');
       if (!crumbs_right) {
         console.warn("Cannot find crumbs content container (#right-of-crumbs)");
