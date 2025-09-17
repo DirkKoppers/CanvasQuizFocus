@@ -11,4 +11,4 @@ Remind students to stay focused when taking a Canvas quiz
  - See it in action here: https://zoom.us/clips/share/oAiz2ln8SyKPpMQ-MhMnTw
 
 
-9/17/2025 - Added two config options: "show_alert_once" and "show_notice_at_mouse_location"
+9/17/2025 - Added two config options: "showAlertOnce" and "showNoticeAtMouseLocation"
