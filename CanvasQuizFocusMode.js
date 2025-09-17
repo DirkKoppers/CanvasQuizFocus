@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Show the main alert box only once per quiz session.	
+  // Show the main alert box only once per quiz session. It will revert to a smaller "stay focused" notice box so that valid browser
+  // tools and extentions can be used. Set to "false" to always show the main alert when a user leaves the content area.	
   const show_alert_once = true;
+
+  // Show the "stay focus" notice box at the location where the mouse leaves the screen. Set to "false" to have it appear in the top-right corner.
+  // If "show_alert_once" is set to "false", the notice box will not show up at all since the alert box will show up instead.
+  const show_notice_at_mouse_location = true;
 	
   const ENV = window.ENV || {};
   const currentUserIsStudent = ENV.current_user_is_student;
@@ -27,9 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Create alert container and message
       const newAlert = document.createElement('div');
       newAlert.innerHTML = `
-        <div id="stayfocused" style="display:none; padding: 50px; background: #ffdddd; border: 1px solid #ff0000; z-index: 9999; position: fixed; top: 10%; left: 50%; transform: translateX(-50%); max-width: 400px;">
-          <p>Hi ` + currentUserDisplay + `,<br><br>We would like you to stay focused on this quiz/assignment. There are a lot of good reasons one might wonder of from this page:
-		  <p><ul><li>Research</li><li>Screen Reader</li><li>Email mom</li></ul></p>Just don't do it for cheating, seriously!<br><br>When you are ready to continue <button id="iamfocused">Click Me!</button>
+        <div id="stayfocused" style="display:none; padding: 50px; background: #ffdddd; border: 1px solid #ff0000; z-index: 9999999; position: fixed; top: 10%; left: 50%; transform: translateX(-50%); max-width: 400px;">
+          <p>Hi ${currentUserDisplay},<br><br>We would like you to stay focused on this quiz. There are good reasons one might wonder of from this page. If you need to use an external tool or extention to complete this quiz,
+		  please check in with your institution if it is approved.<br><br>When you are ready to continue <button id="iamfocused">Click Me!</button>
 		  <span id="show_once" style="display:none;"><br><br>(This reminder won't show up again for this quiz session)</span></p>
         </div>`;
 
@@ -48,7 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	  
       // Create notice container and message
       const newNotice = document.createElement('div');
-      newNotice.innerHTML = '<div id="staynoticed" style="z-index: 9999; top: 15px; right: 15px; position: fixed; display: none; padding: 7px; background: #ffdddd; border: 1px solid #ff0000;">stay focused</div>';
+	  const stayNoticedOffset = 15;
+      newNotice.innerHTML = `<div id="staynoticed" style="z-index: 9999999; top: ${stayNoticedOffset}px; right: ${stayNoticedOffset}px; position: fixed; visibility: hidden; padding: 7px; background: #ffdddd; border: 1px solid #ff0000;">stay focused</div>`;
 	
       const crumbs_right = document.getElementsByClassName('right-of-crumbs');
       if (!crumbs_right) {
@@ -61,6 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		
       let focusAlert = false;
 	  let focusNotice = false;
+	  const stayNoticedDivwidth = stayNoticedDiv.offsetWidth;
+	  const stayNoticedDivheight = stayNoticedDiv.offsetHeight;
+	  const stayNoticedhYcalc = (stayNoticedDivheight/2) + stayNoticedOffset;
+	  const stayNoticedXcalc = (stayNoticedDivwidth/2) + stayNoticedOffset;
 
 	  // Removes the container and message when button is pressed.
       document.getElementById("iamfocused").onclick = () => {
@@ -76,9 +86,58 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       // Listen for mouse leaving the document area
-      document.addEventListener('mouseleave', () => {
+      document.addEventListener('mouseleave', function(event) {
 		if (focusNotice) {
-			stayNoticedDiv.style.display = "block";
+			if (show_notice_at_mouse_location) {
+				let mouseX = event.clientX;
+				let mouseY = event.clientY;
+				let docX = document.documentElement.clientWidth;
+				let docY = document.documentElement.clientHeight;
+				stayNoticedDiv.style.top = '';
+				stayNoticedDiv.style.right = '';
+				stayNoticedDiv.style.bottom = '';
+				stayNoticedDiv.style.left = '';
+				if (mouseX <= 0) {
+					stayNoticedDiv.style.left = `${stayNoticedOffset}px`;
+				}
+				else if (mouseX >= docX) {
+					stayNoticedDiv.style.right = `${stayNoticedOffset}px`;
+				}
+				else if (mouseY <= 0) {
+					stayNoticedDiv.style.top = `${stayNoticedOffset}px`;
+				}
+				else if (mouseY >= docY) {
+					stayNoticedDiv.style.bottom = `${stayNoticedOffset}px`;
+				}
+				else {
+					stayNoticedDiv.style.top = '15px';
+					stayNoticedDiv.style.right = '15px';	
+				}
+				if (stayNoticedDiv.style.left || stayNoticedDiv.style.right) {
+					if (mouseY <= stayNoticedhYcalc) {
+						stayNoticedDiv.style.top = `${stayNoticedOffset}px`;
+					}
+					else if (mouseY >= (docY - stayNoticedhYcalc)) {
+						stayNoticedDiv.style.bottom = `${stayNoticedOffset}px`;
+					}
+					else {
+						stayNoticedDiv.style.top = mouseY - (stayNoticedDivheight/2) + 'px';
+					}				
+				}
+				else if (stayNoticedDiv.style.top || stayNoticedDiv.style.bottom) {
+					if (mouseX <= stayNoticedXcalc) {
+						stayNoticedDiv.style.left = `${stayNoticedOffset}px`;
+					}
+					else if (mouseX >= (docX - stayNoticedXcalc)) {
+						stayNoticedDiv.style.right = `${stayNoticedOffset}px`;
+					}
+					else {
+						stayNoticedDiv.style.left = mouseX - (stayNoticedDivwidth/2) + 'px';
+					}				
+				}
+			}
+			stayNoticedDiv.style.visibility = "visible";
+
 		}
         else if (!focusAlert) {
           focusAlert = true;
@@ -93,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	  // Listen for mouse entering the document area
       document.addEventListener('mouseenter', () => {
 		if (focusNotice) {
-			stayNoticedDiv.style.display = "none";
+			stayNoticedDiv.style.visibility = "hidden";
 		}
       });	  
 	  
