@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // tools and extentions can be used. Set to "false" to always show the main alert when a user leaves the content area.	
   const showAlertOnce = true;
 
-  // Show the "stay focus" notice box at the location where the mouse leaves the screen. Set to "false" to have it appear in the top-right corner.
+  // Show the "stay focus" notice box at the location where the mouse leaves the screen. Set to "false" to have it appear in all four corners.
   // If "showAlertOnce" is set to "false", the notice box will not show up at all since the alert box will show up instead.
   const showNoticeAtMouseLocation = true;
 
@@ -83,8 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
     <div id="staynoticed" style="
       z-index: 9999999;
       position: fixed;
-      top: ${stayNoticedOffset}px;
-      right: ${stayNoticedOffset}px;
       visibility: hidden;
       padding: 7px;
       background: #ffdddd;
@@ -103,6 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.appendChild(noticeContainer);
 
   const stayNoticedDiv = document.getElementById('staynoticed');
+  const stayNoticedDiv2 = stayNoticedDiv.cloneNode(true);
+  const stayNoticedDiv3 = stayNoticedDiv.cloneNode(true);
+  const stayNoticedDiv4 = stayNoticedDiv.cloneNode(true);
+  let fourCorners = false;
 
   let alertVisible = true;
   let noticeVisible = false;
@@ -123,6 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (showAlertOnce) {
       noticeVisible = true;
+	  document.body.appendChild(stayNoticedDiv2);
+	  document.body.appendChild(stayNoticedDiv3);
+	  document.body.appendChild(stayNoticedDiv4);
+      stayNoticedDiv2.style.right = `${stayNoticedOffset}px`;
+      stayNoticedDiv2.style.bottom = `${stayNoticedOffset}px`;
+      stayNoticedDiv3.style.bottom = `${stayNoticedOffset}px`;
+      stayNoticedDiv3.style.left = `${stayNoticedOffset}px`;
+      stayNoticedDiv4.style.top = `${stayNoticedOffset}px`;
+      stayNoticedDiv4.style.left = `${stayNoticedOffset}px`;	  
     }
   });
 
@@ -172,10 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
         stayNoticedDiv.style.left = `${mouseX - (noticeWidth / 2)}px`;
       }
     } 
-    // Default to top-right corner if none set (should not happen)
+    // If mouse moves to window partial obstructing the quiz page
     else {
       stayNoticedDiv.style.top = `${stayNoticedOffset}px`;
       stayNoticedDiv.style.right = `${stayNoticedOffset}px`;
+	  fourCorners = true;
     }
   }
 
@@ -189,8 +201,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           stayNoticedDiv.style.top = `${stayNoticedOffset}px`;
           stayNoticedDiv.style.right = `${stayNoticedOffset}px`;
+		  fourCorners = true;
         }
         stayNoticedDiv.style.visibility = 'visible';
+		if (fourCorners) {
+			stayNoticedDiv2.style.visibility = 'visible';
+			stayNoticedDiv3.style.visibility = 'visible';
+			stayNoticedDiv4.style.visibility = 'visible';
+		}
       } else if (alertVisible) {
         stayFocusedDiv.style.display = 'block';
         quizContent.style.visibility = 'hidden';
@@ -203,6 +221,22 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('mouseenter', () => {
     if (noticeVisible) {
       stayNoticedDiv.style.visibility = 'hidden';
+	  if (fourCorners) {
+		stayNoticedDiv2.style.visibility = 'hidden';
+		stayNoticedDiv3.style.visibility = 'hidden';
+		stayNoticedDiv4.style.visibility = 'hidden';		  
+		fourCorners = false;
+	  }
     }
   });
+//// Show alert when right-click. Does not work in New Quizzes since it runs in a Cross-Origin iframe 
+//  document.addEventListener('contextmenu', (event) => {
+//	  if (alertVisible) {
+////      Hide the right-click menu	
+////      event.preventDefault();		
+//      stayFocusedDiv.style.display = 'block';
+//      quizContent.style.visibility = 'hidden';
+//      if (classicContent) classicContent.style.visibility = 'hidden';
+//	  }
+//  });  
 });
